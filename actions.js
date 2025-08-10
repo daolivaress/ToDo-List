@@ -40,37 +40,45 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Event listeners para los filtros de estado
-  const statusOptions = document.querySelectorAll("#status-filter p");
-  statusOptions.forEach((option) => {
-    option.addEventListener("click", function (e) {
+  const statusFilters = document.querySelectorAll("#status-filter p");
+  statusFilters.forEach((filter) => {
+    filter.addEventListener("click", function (e) {
       e.stopPropagation();
 
-      // Remover clase active de todas las opciones
-      statusOptions.forEach((opt) => opt.classList.remove("active"));
+      // Si el filtro ya está activo, desactivarlo
+      if (this.classList.contains("active")) {
+        this.classList.remove("active");
+      } else {
+        // Remover active de todos los filtros de estado
+        statusFilters.forEach((f) => f.classList.remove("active"));
+        // Agregar active al filtro seleccionado
+        this.classList.add("active");
+      }
 
-      // Agregar clase active a la opción seleccionada
-      this.classList.add("active");
-
-      // Si hay una lista seleccionada, volver a mostrar las tareas con los nuevos filtros
+      // Refrescar la vista si hay una lista seleccionada
       if (selectedTaskList) {
         mostrarTareas(selectedTaskList.listID);
       }
     });
   });
 
-  // Event listeners para los filtros de orden
-  const sortOptions = document.querySelectorAll("#sort-filter p");
-  sortOptions.forEach((option) => {
-    option.addEventListener("click", function (e) {
+  // Event listeners para los filtros de ordenamiento
+  const sortFilters = document.querySelectorAll("#sort-filter p");
+  sortFilters.forEach((filter) => {
+    filter.addEventListener("click", function (e) {
       e.stopPropagation();
 
-      // Remover clase active de todas las opciones
-      sortOptions.forEach((opt) => opt.classList.remove("active"));
+      // Si el filtro ya está activo, desactivarlo
+      if (this.classList.contains("active")) {
+        this.classList.remove("active");
+      } else {
+        // Remover active de todos los filtros de ordenamiento
+        sortFilters.forEach((f) => f.classList.remove("active"));
+        // Agregar active al filtro seleccionado
+        this.classList.add("active");
+      }
 
-      // Agregar clase active a la opción seleccionada
-      this.classList.add("active");
-
-      // Si hay una lista seleccionada, volver a mostrar las tareas con los nuevos filtros
+      // Refrescar la vista si hay una lista seleccionada
       if (selectedTaskList) {
         mostrarTareas(selectedTaskList.listID);
       }
@@ -229,41 +237,32 @@ function mostrarTareas(listID) {
   taskListName.classList.add("active");
   taskListName.querySelector("svg").classList.remove("hidden");
 
-  // Obtener filtros activos
-  const filtersDiv = document.getElementById("filters");
-  let statusFilter = "all"; // Por defecto mostrar todas
-  let sortFilter = "none"; // Por defecto sin ordenar
+  // Obtener los filtros activos
+  const statusFilter = document.querySelector("#status-filter p.active");
+  const sortFilter = document.querySelector("#sort-filter p.active");
 
-  // Verificar filtro de estado
-  const statusOptions = filtersDiv.querySelectorAll("#status-filter p");
-  statusOptions.forEach((option) => {
-    if (option.classList.contains("active")) {
-      statusFilter = option.id.replace("status-", "");
-    }
-  });
-
-  // Verificar filtro de orden
-  const sortOptions = filtersDiv.querySelectorAll("#sort-filter p");
-  sortOptions.forEach((option) => {
-    if (option.classList.contains("active")) {
-      sortFilter = option.textContent.toLowerCase();
-    }
-  });
-
-  // Filtrar tareas según el estado seleccionado
+  // Filtrar y ordenar las tareas
   let tasksToShow = [...currentTaskList.tasks];
 
-  if (statusFilter === "completed") {
-    tasksToShow = tasksToShow.filter((task) => task.completed);
-  } else if (statusFilter === "pending") {
-    tasksToShow = tasksToShow.filter((task) => !task.completed);
+  // Aplicar filtro de estado si hay uno activo
+  if (statusFilter) {
+    const status = statusFilter.id.split("-")[1];
+    if (status === "completed") {
+      tasksToShow = tasksToShow.filter((task) => task.completed);
+    } else if (status === "pending") {
+      tasksToShow = tasksToShow.filter((task) => !task.completed);
+    }
+    // "all" no necesita filtro
   }
 
-  // Ordenar tareas según el criterio seleccionado
-  if (sortFilter === "nombre") {
-    tasksToShow.sort((a, b) => a.name.localeCompare(b.name));
-  } else if (sortFilter === "fecha") {
-    tasksToShow.sort((a, b) => new Date(a.date) - new Date(b.date));
+  // Aplicar ordenamiento si hay uno activo
+  if (sortFilter) {
+    const sortBy = sortFilter.id.split("-")[1];
+    if (sortBy === "name") {
+      tasksToShow.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sortBy === "date") {
+      tasksToShow.sort((a, b) => new Date(a.date) - new Date(b.date));
+    }
   }
 
   const taskContainer = document.getElementById("task-container");
