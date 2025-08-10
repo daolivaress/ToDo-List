@@ -104,17 +104,21 @@ function agregarListaDeTareas() {
 function agregarTarea() {
   const taskName = document.getElementById("task-name-input").value;
   let taskDate;
+  let inputSelected;
 
   if (document.getElementById("task-date-input").classList.contains("active")) {
     taskDate = document.getElementById("task-date-input").value;
+    inputSelected = document.getElementById("task-date-input");
   } else if (
     document.getElementById("task-date-today").classList.contains("active")
   ) {
     taskDate = "Today";
+    inputSelected = document.getElementById("task-date-today");
   } else if (
     document.getElementById("task-date-tomorrow").classList.contains("active")
   ) {
     taskDate = "Tomorrow";
+    inputSelected = document.getElementById("task-date-tomorrow");
   }
 
   if (taskDate == "Today") {
@@ -137,6 +141,7 @@ function agregarTarea() {
       .addEventListener("submit", function (event) {
         event.preventDefault();
         document.getElementById("task-name-input").value = "";
+        inputSelected.classList.remove("active");
         mostrarTareas(selectedTaskList.listID);
         cerrarFormularioTarea();
       });
