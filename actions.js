@@ -329,6 +329,8 @@ function mostrarFormularioTarea() {
   void overlay.offsetWidth;
   void form.offsetWidth;
 
+  document.getElementById("add-task-btn").classList.add("active");
+
   // Activar transiciones
   setTimeout(() => {
     overlay.classList.add("visible");
@@ -347,9 +349,42 @@ function cerrarFormularioTarea() {
   // Quitar blur
   document.querySelector("main").classList.remove("blur-background");
 
+  document.getElementById("add-task-btn").classList.remove("active");
+
   // Esperar a que termine la animación antes de ocultar
   setTimeout(() => {
     form.classList.add("hidden");
     overlay.classList.add("hidden");
   }, 300);
+}
+
+function mostrarListaTareas() {
+  const taskList = document.getElementById("sidebar");
+  const overlay = document.getElementById("overlay");
+  const isHidden = taskList.classList.contains("hidden");
+  const taskListBtn = document.getElementById("showListMobile");
+  const hideListIcon = document.getElementById("hide-list-icon");
+  const showListIcon = document.getElementById("show-list-icon");
+
+  if (isHidden) {
+    taskList.classList.remove("hidden");
+    overlay.classList.remove("hidden");
+    showListIcon.classList.add("hidden");
+    hideListIcon.classList.remove("hidden");
+    taskListBtn.classList.add("left-60");
+    setTimeout(() => {
+      overlay.classList.add("visible");
+      taskList.classList.add("visible");
+    }, 10);
+  } else {
+    taskList.classList.add("hidden");
+    overlay.classList.remove("visible");
+    showListIcon.classList.remove("hidden");
+    hideListIcon.classList.add("hidden");
+    taskListBtn.classList.remove("left-60");
+    setTimeout(() => {
+      overlay.classList.add("hidden");
+      taskList.classList.remove("visible");
+    }, 300);
+  }
 }
