@@ -330,6 +330,7 @@ function mostrarFormularioTarea() {
   void form.offsetWidth;
 
   document.getElementById("add-task-btn").classList.add("active");
+  document.getElementById("showListMobile").classList.remove("max-md:block");
 
   // Activar transiciones
   setTimeout(() => {
@@ -350,6 +351,7 @@ function cerrarFormularioTarea() {
   document.querySelector("main").classList.remove("blur-background");
 
   document.getElementById("add-task-btn").classList.remove("active");
+  document.getElementById("showListMobile").classList.add("max-md:block");
 
   // Esperar a que termine la animación antes de ocultar
   setTimeout(() => {
